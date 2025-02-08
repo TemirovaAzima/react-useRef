@@ -1,20 +1,27 @@
-import {useState, useRef, useEffect} from 'react';
+import {useState, useRef} from 'react';
 
-export default function App (){
-    const [count, setCount] = useState(0);
-    const intervalRef = useRef(null);
+export const App = ()=>{
+    const [message, setMessage] = useState("Waiting...");
+    const timeoutRef = useRef(null);
 
-    useEffect(()=>{
-        intervalRef.current = setInterval(()=>{
-            setCount((prevCount)=> prevCount + 1)
-        },1000);
-        return(()=> {clearInterval(intervalRef.current)})
-    },[]);
+    const startTimeout = ()=>{
+        clearTimeout(timeoutRef.current);
+        setMessage("Waiting..");
+        timeoutRef.current = setTimeout(()=>{
+            setMessage('Timeout Finished!');
+        },5000);
+    };
 
-    return (
+    const cancelTimeout = ()=>{
+        clearTimeout(timeoutRef.current);
+        setMessage("Timeout Cancelled!");
+    };
+
+    return(
         <div>
-            <h2>Count : {count}</h2>
-            <button onClick={()=>clearInterval(intervalRef.current)}>Stop</button>
+            <h2>{message}</h2>
+            <button onClick={startTimeout}>Start TimeOut</button>
+            <button onClick={cancelTimeout}>Cancel TimeOut</button>
         </div>
-    );
-};
+    )
+}
